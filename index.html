@@ -75,6 +75,7 @@
         }
         /* 丸ボタン */
         .indicator-container {
+            
     position: absolute;
     top: 60%; /* 画面の65%の高さ */
     left: 50%;
@@ -240,7 +241,7 @@
                 button.classList.remove('red', 'blue', 'gray');
                 if (index + 1 === currentSection) {
                     button.classList.add('red');
-                } else if (index + 1 <= maxUnlockedSection) {
+                } else if (index + 1 <= maxUnlockedSection && currentSection!==1) {
                     button.classList.add('blue');
                 } else {
                     button.classList.add('gray');
