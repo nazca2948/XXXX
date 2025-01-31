@@ -12,28 +12,28 @@
             font-family: sans-serif;
         }
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #000000;
-            padding: 1px;
-        }
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #2e2e2e;
+    padding: 1px;
+}
         /* ゲージ */
         .gauge-container {
-            width: 80%;
-            height: 40px;
-            border-radius: 10px;
-            position: relative;
-            background-color: black;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
-        }
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    position: absolute;
+    top: 5%; /* 画面の5%の高さ */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+}
         .gauge {
             width: 50%;
             height: 100%;
@@ -52,14 +52,17 @@
         }
         /* 画像ウインドウ */
         .image-window {
-            width: 95%;
-            aspect-ratio: 16 / 9;
-            background-color: #000000;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-        }
+    width: 95%;
+    aspect-ratio: 16 / 9;
+    background-color: #000000;
+    border-radius: 10px;
+    overflow: hidden;
+    position: absolute;
+    top: 15%; /* 画面の15%の高さ */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
         .image-slider {
             display: flex;
             width: 200%;
@@ -72,10 +75,14 @@
         }
         /* 丸ボタン */
         .indicator-container {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
+    position: absolute;
+    top: 65%; /* 画面の65%の高さ */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
         .indicator {
             width: 40px;
             height: 40px;
@@ -93,11 +100,12 @@
         }
         /* 入力欄と送信ボタン */
         .input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 85%;
-        }
+    position: absolute;
+    top: 75%; /* 画面の75%の高さ */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+}
         .input-group {
             width: 100%;
             text-align: left;
