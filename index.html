@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>爆弾解除専用サイト</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #000000;
+            padding: 5px;
+        }
+        /* ゲージ */
+        .gauge-container {
+            width: 80%;
+            height: 40px;
+            border-radius: 10px;
+            position: relative;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        .gauge {
+            width: 50%;
+            height: 100%;
+            background-color: yellow;
+            border-radius: 10px;
+            position: absolute;
+            left: 0;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+        }
+        .gauge-label {
+            position: relative;
+            font-size: 12px;
+            font-weight: bold;
+            color: black;
+            z-index: 2;
+        }
+        /* 画像ウインドウ */
+        .image-window {
+            width: 90%;
+            aspect-ratio: 16 / 9;
+            background-color: #000000;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+        }
+        .image-slider {
+            display: flex;
+            width: 200%;
+            transition: transform 0.3s ease-in-out;
+        }
+        .image-slider img {
+            width: 100%;
+            border-radius: 10px;
+            user-select: none;
+        }
+        /* 丸ボタン */
+        .indicator-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .indicator {
+            width: 20px;
+            height: 20px;
+            background-color: #bbb;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        .indicator.blue {
+            background-color: #007bff;
+            opacity: 1;
+        }
+        .indicator.red {
+            background-color: rgb(0, 255, 30);
+            opacity: 1;
+        }
+        /* 入力欄と送信ボタン */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 85%;
+        }
+        .input-group {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 3px;
+            font-weight: bold;
+            color: yellow;
+        }
+        input {
+            width: 100%;
+            height: 40px;
+            font-size: 20px;
+            text-align: center;
+            border: 2px solid #aaa;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            margin-top: 5px;
+            padding: 10px 20px;
+            font-size: 25px;
+            font-weight: bold;
+            border: none;
+            background-color: #ffff00;
+            color: rgb(0, 0, 0);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部ゲージ -->
+    <div class="gauge-container">
+        <span class="gauge-label">爆弾識別コード</span>
+        <div class="gauge"></div>
+        <span class="gauge-label">解除コード</span>
+    </div>
+
+    <!-- 画像ウインドウ -->
+    <div class="image-window" id="imageWindow">
+        <div class="image-slider" id="imageSlider">
+            <img src="image1.jpg" alt="画像1">
+            <img src="image2.jpg" alt="画像2">
+        </div>
+    </div>
+
+    <!-- 丸ボタン -->
+    <div class="indicator-container">
+        <div class="indicator blue" id="btn1"></div>
+        <div class="indicator" id="btn2"></div>
+        <div class="indicator" id="btn3"></div>
+    </div>
+
+    <!-- 入力欄と送信ボタン -->
+    <div class="input-container">
+        <div class="input-group">
+            <label for="bomb-code">爆弾識別コード</label>
+            <input type="text" id="bomb-code" maxlength="3" pattern="\d*" placeholder="000">
+        </div>
+        <div class="input-group">
+            <label for="disarm-code">解除コード</label>
+            <input type="text" id="disarm-code" maxlength="3" pattern="\d*" placeholder="000">
+        </div>
+        <button id="submit-btn">送信</button>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let currentSection = 1;
+        let maxUnlockedSection = 1;
+        const buttons = document.querySelectorAll('.indicator');
+        const slider = document.getElementById('imageSlider');
+        const gauge = document.querySelector('.gauge');
+        const images = {
+            1: ['image1.jpg', 'image2.jpg'],
+            2: ['image3.jpg', 'image4.jpg'],
+            3: ['image5.jpg', 'image6.jpg']
+        };
+
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const bombCode = document.getElementById('bomb-code').value;
+            const disarmCode = document.getElementById('disarm-code').value;
+
+            if (bombCode === '001' && disarmCode === '333' && maxUnlockedSection < 2) {
+                maxUnlockedSection = 2;
+                currentSection = 2;
+            } else if (bombCode === '534' && disarmCode === '201' && maxUnlockedSection < 3) {
+                maxUnlockedSection = 3;
+                currentSection = 3;
+            }
+
+            if (currentSection <= maxUnlockedSection) {
+                updateIndicators();
+                updateImages();
+            }
+        });
+
+        buttons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                if (index + 1 <= maxUnlockedSection) {
+                    currentSection = index + 1;
+                    updateIndicators();
+                    updateImages();
+                }
+            });
+        });
+
+        document.getElementById('imageWindow').addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.getElementById('imageWindow').addEventListener('touchend', (e) => {
+            let endX = e.changedTouches[0].clientX;
+            let diff = endX - startX;
+
+            if (diff > 50 && currentIndex === 1) {
+                currentIndex = 0;
+            } else if (diff < -50 && currentIndex === 0) {
+                currentIndex = 1;
+            }
+
+            updateSlider();
+        });
+
+        function updateIndicators() {
+            buttons.forEach((button, index) => {
+                button.classList.remove('red', 'blue', 'gray');
+                if (index + 1 === currentSection) {
+                    button.classList.add('red');
+                } else if (index + 1 <= maxUnlockedSection) {
+                    button.classList.add('blue');
+                } else {
+                    button.classList.add('gray');
+                }
+            });
+        }
+
+        function updateImages() {
+            slider.innerHTML = `
+                <img src="${images[currentSection][0]}" alt="画像">
+                <img src="${images[currentSection][1]}" alt="画像">
+            `;
+            currentIndex = 0;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            slider.style.transform = `translateX(${-currentIndex * 100}%)`;
+            gauge.style.left = currentIndex === 0 ? '0' : '50%';
+        }
+    </script>
+
+</body>
+</html>
